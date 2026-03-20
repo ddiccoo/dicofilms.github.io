@@ -102,229 +102,122 @@ $(document).ready(function () {
   });
 });
 
-// ----- VISITORS DATA HANDLER ----- //
-// $(document).ready(function () {
-//   const defaultShowNumber = 6;
-//   const maxShowNumber = 999;
+// ----- BUKU UCAPAN ----- //
+var currentOffset = 0;
+var isLoading = false; // Guard agar tidak terjadi double fetch
 
-//   var isHidden = true;
-//   initShowButton();
-//   loadCounter();
-//   loadData(defaultShowNumber);
+function loadUcapan(isNew = false) {
+  if (isLoading) return; // Jika sedang loading, jangan ambil data lagi
+  isLoading = true;
 
-//   $(".receiver, .receiver-label, .arrow, .bounce").click(function () {
-//     $([document.documentElement, document.body]).animate(
-//       {
-//         scrollTop: $("#thd-couple").offset().top,
-//       },
-//       700,
-//     );
-//   });
+  if (isNew) {
+    currentOffset = 0;
+    $("#daftar-ucapan").empty(); // Pastikan kontainer kosong total saat reset
+  }
 
-//   $("#btn-show").click(function () {
-//     isHidden = false;
-//     loadData(maxShowNumber);
-//     $("#button-show-all").hide();
-//     $("#button-show-less").show();
-//   });
+  $.ajax({
+    type: "GET",
+    url: "ambil_ucapan.php",
+    data: { offset: currentOffset },
+    dataType: "json",
+    success: function (data) {
+      var html = "";
+      if (data && data.length > 0) {
+        data.forEach(function (item) {
+          var statusColor =
+            item.kehadiran === "Hadir"
+              ? "rgba(46, 204, 113, 0.4)"
+              : "rgba(255, 255, 255, 0.2)";
+          html += `
+                    <div class="ucapan-card">
+                        <div class="ucapan-header">
+                            <h4 class="ucapan-nama">${item.nama}</h4>
+                            <span class="ucapan-status" style="background: ${statusColor}">${item.kehadiran}</span>
+                        </div>
+                        <p class="ucapan-pesan">"${item.pesan}"</p>
+                        <span class="ucapan-waktu"><i class="icon-clock"></i> ${item.created_at}</span>
+                    </div>`;
+        });
 
-//   $("#btn-hide").click(function () {
-//     isHidden = true;
-//     loadData(defaultShowNumber);
-//     $("#button-show-all").show();
-//     $("#button-show-less").hide();
-//   });
+        if (isNew) {
+          $("#daftar-ucapan").html(html); // Gunakan .html() untuk menimpa jika data baru
+        } else {
+          $("#daftar-ucapan").append(html); // Gunakan .append() hanya untuk load more
+        }
 
-//   $("#form-tamu-undangan").on("submit", function (e) {
-//     e.preventDefault();
-//     $("#preview-nama").text($("#input-nama").val());
-//     $("#preview-alamat").text($("#input-alamat").val());
-//     $("#preview-ucapan").text($("#input-ucapan").val());
-//     $("#preview-tanggal").text(formatDate(new Date()));
-//     $("#modal-preview-submit").modal("show");
-//   });
+        currentOffset += data.length;
+        if (data.length === 5) {
+          $("#btn-load-more").show();
+        } else {
+          $("#btn-load-more").hide();
+        }
+      } else {
+        if (currentOffset === 0) {
+          $("#daftar-ucapan").html(
+            '<p class="text-center" style="color: #888;">Belum ada doa tertulis.</p>',
+          );
+        }
+        $("#btn-load-more").hide();
+      }
+    },
+    complete: function () {
+      isLoading = false; // Buka kembali kunci loading
+    },
+  });
+}
 
-//   $("#button-confirm").on("click", function (e) {
-//     e.preventDefault();
-//     $.ajax({
-//       async: false,
-//       url: "features/service.php?action=save",
-//       type: "post",
-//       data: $("#form-tamu-undangan").serialize(),
-//       success: function (data) {
-//         if (data === "true") {
-//           $("#nama-modal").text($("#input-nama").val());
-//           $("#modal-after-submit").modal("show");
+$(document).ready(function () {
+  // Gunakan .off() sebelum .on() untuk memastikan handler tidak terpasang dua kali
+  $("#form-ucapan")
+    .off("submit")
+    .on("submit", function (e) {
+      e.preventDefault();
 
-//           $("#input-kehadiran").prop("disabled", true);
-//           $("#input-nama").prop("disabled", true);
-//           $("#input-ucapan").val("");
-//           $("#input-ucapan").prop("disabled", true);
-//           $("#input-alamat").val("");
-//           $("#input-alamat").prop("disabled", true);
-//           $("#input-submit").prop("disabled", true);
-//           isHidden ? loadData(defaultShowNumber) : loadData(maxShowNumber);
-//           initShowButton();
-//           loadCounter();
-//         } else {
-//           $("#error_detail").html(data);
-//           $("#modal-after-failed").modal("show");
-//         }
-//       },
-//       error: function (data) {
-//         $("#error_detail").html(data);
-//         $("#modal-after-failed").modal("show");
-//       },
-//     });
-//   });
+      var $btn = $(this).find('button[type="submit"]');
+      $btn.prop("disabled", true).text("Mengirim..."); // Disable tombol agar tidak klik 2x
 
-//   $(document).delegate(
-//     "[data-target='#modal-preview-reply']",
-//     "click",
-//     function () {
-//       $("#modal-preview-reply").modal("show");
-//       var parentId = $(this).attr("data-id");
+      var formData = {
+        nama: $("#nama").val(),
+        kehadiran: $("#kehadiran").val(),
+        pesan: $("#pesan").val(),
+      };
 
-//       $("#id_parent").val(parentId);
-//       $("#preview-reply-nama").html($(this).attr("data-nama"));
-//       $("#preview-reply-ucapan").html($(this).attr("data-ucapan"));
-//     },
-//   );
+      $.ajax({
+        type: "POST",
+        url: "simpan_ucapan.php",
+        data: formData,
+        dataType: "json",
+        success: function (response) {
+          if (response.status === "success") {
+            alert("Ucapan Berhasil Dikirim!");
+            $("#form-ucapan")[0].reset();
+            loadUcapan(true); // Reset daftar
+          } else {
+            alert("Gagal mengirim: " + response.message);
+          }
+        },
+        error: function () {
+          alert("Terjadi kesalahan sistem.");
+        },
+        complete: function () {
+          $btn.prop("disabled", false).text("Kirim Ucapan");
+        },
+      });
+    });
 
-//   $("#form-reply-tamu-undangan").on("submit", function (e) {
-//     e.preventDefault();
-//     $.ajax({
-//       async: false,
-//       url: "features/service.php?action=reply",
-//       type: "post",
-//       data: $("#form-reply-tamu-undangan").serialize(),
-//       success: function (data) {
-//         if (data === "true") {
-//           $("#modal-preview-reply").modal("hide");
-//           $("#input-reply-ucapan").val("");
-//           isHidden ? loadData(defaultShowNumber) : loadData(maxShowNumber);
-//         } else {
-//           $("#error_detail").html(data);
-//           $("#modal-after-failed").modal("show");
-//         }
-//       },
-//       error: function (data) {
-//         $("#error_detail").html(data);
-//         $("#modal-after-failed").modal("show");
-//       },
-//     });
-//   });
+  // Inisialisasi awal
+  loadUcapan();
 
-//   function initShowButton() {
-//     $("#button-show-all").hide();
-//     $("#button-show-less").hide();
-//     $.ajax({
-//       url: "features/service.php?action=count",
-//       type: "post",
-//       success: function (jumlahUndangan) {
-//         if (jumlahUndangan > defaultShowNumber) {
-//           $("#button-show-all").show();
-//           $("#count-undangan").text(
-//             "(" + (jumlahUndangan - defaultShowNumber) + ")",
-//           );
-//         }
-//       },
-//     });
-//   }
-
-//   function loadData(limit) {
-//     if (location.hostname === "localhost") {
-//       $("#data-undangan").html("");
-//       console.log("[loadData] localhost");
-//       return;
-//     }
-//     $.ajax({
-//       url: "features/data-undangan.php?limit=" + limit,
-//       type: "get",
-//       async: false,
-//       success: function (data) {
-//         $("#data-undangan").html(data);
-//       },
-//     });
-//   }
-
-//   function loadCounter() {
-//     if (location.hostname === "localhost") {
-//       $("#data-counter-hadir").text("0");
-//       $("#data-counter-tidak-hadir").text("0");
-//       $("#data-counter-ragu").text("0");
-//       console.log("[loadCounter] localhost");
-//       return;
-//     }
-//     $.ajax({
-//       url: "features/service.php?action=counter",
-//       type: "get",
-//       async: false,
-//       success: function (data) {
-//         var response = JSON.parse(data);
-//         $("#data-counter-hadir").text(response.hadir);
-//         $("#data-counter-tidak-hadir").text(response.tidak_hadir);
-//         $("#data-counter-ragu").text(response.ragu);
-//       },
-//     });
-//   }
-
-//   const months = [
-//     "Jan",
-//     "Feb",
-//     "Mar",
-//     "Apr",
-//     "May",
-//     "Jun",
-//     "Jul",
-//     "Aug",
-//     "Sep",
-//     "Oct",
-//     "Nov",
-//     "Dec",
-//   ];
-//   function formatDate(date) {
-//     var d = new Date(date),
-//       month = d.getMonth(),
-//       day = "" + d.getDate(),
-//       year = d.getFullYear();
-
-//     if (month.length < 2) month = "0" + month;
-//     if (day.length < 2) day = "0" + day;
-
-//     return (
-//       [day, months[month], year].join(" ") +
-//       " - " +
-//       [d.getHours(), d.getMinutes()].join(":")
-//     );
-//   }
-// });
-
-// ----- FOOTER LINK COUNTER ----- //
-// var resellCode = "Customers";
-// $(".footer-icon").on("click", function () {
-//   var linkId = $(this).attr("id");
-//   if (!linkId) linkId = $(this).parent().attr("id");
-//   var media = linkId.split("-")[2];
-
-//   $.ajax({
-//     url:
-//       "features/service.php?action=resell&resellCode=" +
-//       encodeURIComponent(resellCode) +
-//       "&media=" +
-//       media,
-//     type: "post",
-//     async: true,
-//     success: function (data) {
-//       console.log("Recorded with return : " + data);
-//     },
-//   });
-// });
+  $("#btn-load-more").on("click", function () {
+    loadUcapan();
+  });
+});
+// ----- BUKU UCAPAN END ----- //
 
 // ----- INVITATION RECEIVER ----- //
 var url_string = window.location.href;
 var url = new URL(url_string);
-var receiver = url.searchParams.get("kepada") || "Kontol";
+var receiver = url.searchParams.get("kepada") || "Nama Undangan";
 if (receiver === "" || receiver == null) {
   $(".receiver-label").remove();
   $(".receiver").remove();

@@ -39,10 +39,7 @@
       href="https://cdn.twohearts.id/v1.0/css/icomoon.css"
     />
     <!-- Magnific Popup -->
-    <link
-      rel="stylesheet"
-      href="https://cdn.twohearts.id/v1.0/css/magnific-popup.css"
-    />
+    <link rel="stylesheet" href="css/magnific-popup.css" />
     <!-- Bootstrap  -->
     <link
       rel="stylesheet"
@@ -51,9 +48,9 @@
     <!-- THD Stylesheet  -->
     <link rel="stylesheet" href="css/style.min.css" />
     <!-- AES Rollups JS -->
-    <script src="https://cdn.twohearts.id/v1.0/js/aes.rollups.js"></script>
+    <script src="js/aes.rollups.js"></script>
     <!-- Modernizr JS -->
-    <script src="https://cdn.twohearts.id/v1.0/js/modernizr-2.6.2.min.js"></script>
+    <script src="js/modernizr-2.6.2.min.js"></script>
   </head>
 
   <body>
@@ -231,7 +228,7 @@
           <div class="col-md-12 text-center">
             <p class="animate-box">
               Artinya : <br />
-              Wahai pasangan suami-isteri, <br />
+              Wahai pasangan suami-istri, <br />
               semoga kalian tetap bersatu dan tidak pernah terpisahkan. <br />
               Semoga kalian mencapai hidup penuh kebahagiaan, <br />
               tinggal di rumah yang penuh kegembiraan bersama seluruh
@@ -406,8 +403,8 @@
                 </div>
                 <br />
                 <p class="text-center">
-                  <strong>BANK BRI - 225301008362506 </strong> <br />
-                  <small>a/n. Ni Luh Yuni Kusuma Yanti</small>
+                  <strong>BANK BRI - 213201003689507 </strong> <br />
+                  <small>a/n. Ketut Supriadi</small>
                 </p>
               </div>
               <div class="col-md-12 text-center">
@@ -418,8 +415,8 @@
               </div>
               <script>
                 function salinRekening2() {
-                  navigator.clipboard.writeText("225301008362506");
-                  alert("No. Rekening telah disalin : 225301008362506");
+                  navigator.clipboard.writeText("213201003689507");
+                  alert("No. Rekening telah disalin : 213201003689507");
                 }
               </script>
             </div>
@@ -665,110 +662,108 @@
       </div>
     </div>
 
+    <!-- KARTU UCAPAN -->
     <div
       id="thd-greetings"
       class="thd-bg"
       data-stellar-background-ratio="0.5"
-      data-stellar-vertical-offset="-10"
+      data-stellar-vertical-offset="-150"
     >
       <div class="overlay"></div>
       <div class="container">
         <div class="row">
           <div class="col-md-8 col-md-offset-2 text-center thd-heading">
-            <h2 class="animate-box">Kesan &amp; Pesan</h2>
+            <h2 class="animate-box">R S V P.</h2>
             <p class="animate-box font-colorize">
-              Kami tunggu pesan ucapan dan kesan Bapak/Ibu/Saudara/i pada form
-              dibawah. <br />
-              <small>Terima kasih.</small>
+              Berikan doa restu dan ucapan tulus Anda untuk kedua mempelai
+              melalui kartu ucapan di bawah ini.
             </p>
           </div>
         </div>
+
         <div class="row animate-box">
-          <div class="col-md-10 col-md-offset-1">
-            <form
-              method="POST"
-              id="form-tamu-undangan"
-              class="form-inline animate-box"
-            >
-              <div class="col-md-12">
-                <div class="col-md-6 col-sm-6">
+          <div class="col-md-8 col-md-offset-2">
+            <div class="comment-card shadow-lg">
+              <div class="card-inner">
+                <form id="form-ucapan">
                   <div class="form-group">
-                    <label for="name" class="sr-only">Nama</label>
+                    <label for="nama" class="label-classic">Nama Lengkap</label>
                     <input
-                      id="input-nama"
                       type="text"
-                      name="nama"
-                      class="form-control"
-                      placeholder="Nama"
-                      maxlength="20"
+                      class="form-control classic-input"
+                      id="nama"
+                      placeholder="Contoh: Bpk. Jero Ketut"
                       required
                     />
                   </div>
-                </div>
-                <div class="col-md-6 col-sm-6">
                   <div class="form-group">
-                    <label class="sr-only">Alamat</label>
-                    <input
-                      id="input-alamat"
-                      type="text"
-                      name="alamat"
-                      class="form-control"
-                      placeholder="Alamat, Contoh: Kediri, Tabanan"
-                      maxlength="40"
-                      required
-                    />
+                    <label for="kehadiran" class="label-classic"
+                      >Konfirmasi Kehadiran</label
+                    >
+                    <select class="form-control classic-input" id="kehadiran">
+                      <option value="Hadir">Hadir</option>
+                      <option value="Ragu-ragu">Masih Ragu-ragu</option>
+                      <option value="Tidak Hadir">Tidak Hadir</option>
+                    </select>
                   </div>
-                </div>
-              </div>
-              <div class="col-md-12">
-                <div class="col-md-12 col-sm-12">
                   <div class="form-group">
-                    <label class="sr-only">Ucapan</label>
+                    <label for="pesan" class="label-classic"
+                      >Pesan Ucapan</label
+                    >
                     <textarea
-                      id="input-ucapan"
-                      type="text"
-                      name="ucapan"
-                      class="form-control"
-                      placeholder="Ucapan Selamat"
+                      class="form-control classic-input"
+                      id="pesan"
+                      rows="4"
+                      placeholder="Tuliskan doa dan harapan Anda..."
                       required
                     ></textarea>
                   </div>
-                </div>
-                <div class="form-group">
-                  <div class="col-sm-12">
-                    <select
-                      id="input-kehadiran"
-                      class="form-control"
-                      name="kehadiran"
-                      required
-                    >
-                      <option selected disabled value="">
-                        Konfirmasi Kehadiran
-                      </option>
-                      <option class="counter-option" value="hadir">
-                        Saya Akan Hadir
-                      </option>
-                      <option class="counter-option" value="tidak_hadir">
-                        Saya Belum Bisa Hadir
-                      </option>
-                      <option class="counter-option" value="ragu">
-                        Saya Masih Ragu
-                      </option>
-                    </select>
+                  <div class="text-center">
+                    <button type="submit" class="btn btn-primary btn-classic">
+                      Kirim Ucapan
+                    </button>
                   </div>
-                </div>
-                <br />
-                <div class="col-md-12 col-sm-12">
-                  <button
-                    id="input-submit"
-                    type="submit"
-                    class="btn btn-primary btn-block"
-                  >
-                    Kirim
-                  </button>
-                </div>
+                </form>
               </div>
-            </form>
+            </div>
+          </div>
+        </div>
+        <hr
+          class="hr-50"
+          style="margin-top: 40px; border-color: rgba(255, 255, 255, 0.2)"
+        />
+        <div class="row animate-box" style="margin-top: 50px">
+          <div class="col-md-8 col-md-offset-2">
+            <h3
+              class="text-center"
+              style="
+                font-family: &quot;Sacramento&quot;, Arial, serif;
+                color: #fff;
+                font-size: 35px;
+                margin-bottom: 30px;
+              "
+            >
+              Doa & Harapan
+            </h3>
+            <div id="daftar-ucapan" class="ucapan-container">
+              <p class="text-center" style="color: #888">
+                Memuat ucapan indah...
+              </p>
+            </div>
+            <div class="text-center" style="margin-top: 20px">
+              <button
+                id="btn-load-more"
+                class="btn btn-sm"
+                style="
+                  background: rgba(255, 255, 255, 0.1);
+                  color: #fff;
+                  border: 1px solid rgba(255, 255, 255, 0.3);
+                  display: none;
+                "
+              >
+                Muat Lebih Banyak...
+              </button>
+            </div>
           </div>
         </div>
       </div>
@@ -781,7 +776,7 @@
           <div class="col-md-8 col-md-offset-2">
             <div class="col-md-12 text-center svg colored">
               <img
-                src="https://cdn.twohearts.id/v1.0/images/santih-gold.png"
+                src="images/santih-gold.png"
                 class="balinese-aksara-santih animate-box"
                 alt=""
               />
@@ -796,6 +791,7 @@
         <br /><br /><br />
       </div>
     </div>
+    <!-- KARTU UCAPAN END -->
 
     <footer id="thd-footer" role="contentinfo" class="footer-wrapper">
       <div class="container">
@@ -857,7 +853,9 @@
               <script>
                 document.write(new Date().getFullYear());
               </script>
-              <a href="https://www.twohearts.id">Dico Creative</a>
+              <a href="https://ddiccoo.github.io/website-ucapan-online/"
+                >Dico Creative</a
+              >
             </p>
             <br />
             <br />
@@ -955,7 +953,6 @@
                 <div class="message-card">
                   <h4 class="card-header">
                     <b><span id="preview-nama"></span></b> dari
-                    <span id="preview-alamat"></span>
                   </h4>
                   <p>
                     <span id="preview-ucapan"></span><br />
